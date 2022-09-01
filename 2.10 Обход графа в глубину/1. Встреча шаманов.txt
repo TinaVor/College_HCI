@@ -1,0 +1,47 @@
+#include <iostream>
+#include <vector>
+#include <stack>
+using namespace std;
+
+bool seek (vector<short>* w, short beg, short end, short n) {
+  stack<short> stk;
+  short* go = new short[n]{0};
+  stk.push(beg);
+  while (!stk.empty()) {
+    short cur = stk.top();
+    stk.pop();
+    go[cur] = 1;
+    for (short i = 0; i < w[cur].size(); i++) {
+      short t = w[cur][i];
+      if (t == end) return true;
+      if (go[t] == 0) stk.push(t);
+    }
+  }
+  return false;
+}
+
+int main() {
+  short field, trop;
+  cin >> field >> trop;
+  vector<short>* w = new vector<short>[field];
+  for (short i = 0; i < trop; i++) {
+    short to, from;
+    cin >> from >> to;
+    w[to - 1].push_back(from - 1);
+    w[from - 1].push_back(to - 1);
+  }
+  short curS, toS, Shaman;
+  cin >> Shaman;
+  cin >> curS;
+  for (short j = 0; j < Shaman - 1; j++) {
+    cin >> toS;
+    if (seek(w, curS - 1, toS - 1, field)) {
+      curS = toS;
+    } else {
+      cout << "NO" << endl;
+      return 0;
+    }
+  }
+  cout << "YES" << endl;
+  return 0;
+}

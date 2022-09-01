@@ -1,0 +1,45 @@
+#include <iostream>
+#include <fstream>
+#include <vector>
+#include <stack>
+using namespace std;
+
+void familar(vector<short>* w, short* v, short beg) {
+  stack<short> stk;
+  stk.push(beg);
+  while (!stk.empty()) {
+    short cur = stk.top();
+    stk.pop();
+    v[cur] = 1;
+    for (short i = 0; i < w[cur].size(); i++) {
+      short k = w[cur][i];
+      if (v[k] == 0) stk.push(k);
+    }
+  }
+}
+
+int main() {
+  ifstream fin;
+  fin.open("input.txt");
+  short n, t = 1;
+  fin >> n;
+  vector<short>* w = new vector<short>[n];
+  while (!fin.eof()) {
+    short to, from;
+    fin >> from >> to;
+    w[to - 1].push_back(from - 1);
+    w[from - 1].push_back(to - 1);
+  }
+  short* v = new short[n]{0};
+
+  for (int i = 0; i < n; i++) {
+    if (v[i] == 0) {
+      familar(w, v, i);
+      t++;
+    }
+  }
+  cout << t;
+  return 0;
+}
+
+
